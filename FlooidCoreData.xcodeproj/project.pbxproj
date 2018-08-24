@@ -8,12 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		461BAC33212FC77C00BAD33F /* FlooidCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 461BAC31212FC77C00BAD33F /* FlooidCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		461BAC3A212FC78E00BAD33F /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC39212FC78E00BAD33F /* Repository.swift */; };
+		461BAC3C212FC79C00BAD33F /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC3B212FC79C00BAD33F /* Context.swift */; };
+		461BAC3E212FC7A500BAD33F /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC3D212FC7A500BAD33F /* Query.swift */; };
+		461BAC40212FC7B000BAD33F /* Results.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC3F212FC7B000BAD33F /* Results.swift */; };
+		461BAC42212FC7C000BAD33F /* ThreadSafe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC41212FC7C000BAD33F /* ThreadSafe.swift */; };
+		461BAC44212FC7D000BAD33F /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC43212FC7D000BAD33F /* Object.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		461BAC2E212FC77C00BAD33F /* FlooidCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlooidCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		461BAC31212FC77C00BAD33F /* FlooidCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlooidCoreData.h; sourceTree = "<group>"; };
 		461BAC32212FC77C00BAD33F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		461BAC39212FC78E00BAD33F /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
+		461BAC3B212FC79C00BAD33F /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
+		461BAC3D212FC7A500BAD33F /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
+		461BAC3F212FC7B000BAD33F /* Results.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Results.swift; sourceTree = "<group>"; };
+		461BAC41212FC7C000BAD33F /* ThreadSafe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSafe.swift; sourceTree = "<group>"; };
+		461BAC43212FC7D000BAD33F /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
+		461BAC45212FC94F00BAD33F /* FlooidCoreData.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = FlooidCoreData.podspec; path = /Users/martinlalev/Documents/Coding/MPLTools/FlooidCoreData/FlooidCoreData/FlooidCoreData.podspec; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,8 +59,15 @@
 		461BAC30212FC77C00BAD33F /* FlooidCoreData */ = {
 			isa = PBXGroup;
 			children = (
+				461BAC39212FC78E00BAD33F /* Repository.swift */,
+				461BAC3B212FC79C00BAD33F /* Context.swift */,
+				461BAC3D212FC7A500BAD33F /* Query.swift */,
+				461BAC3F212FC7B000BAD33F /* Results.swift */,
+				461BAC41212FC7C000BAD33F /* ThreadSafe.swift */,
+				461BAC43212FC7D000BAD33F /* Object.swift */,
 				461BAC31212FC77C00BAD33F /* FlooidCoreData.h */,
 				461BAC32212FC77C00BAD33F /* Info.plist */,
+				461BAC45212FC94F00BAD33F /* FlooidCoreData.podspec */,
 			);
 			path = FlooidCoreData;
 			sourceTree = "<group>";
@@ -95,6 +115,7 @@
 				TargetAttributes = {
 					461BAC2D212FC77C00BAD33F = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 0940;
 					};
 				};
 			};
@@ -130,6 +151,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				461BAC3A212FC78E00BAD33F /* Repository.swift in Sources */,
+				461BAC3E212FC7A500BAD33F /* Query.swift in Sources */,
+				461BAC40212FC7B000BAD33F /* Results.swift in Sources */,
+				461BAC42212FC7C000BAD33F /* ThreadSafe.swift in Sources */,
+				461BAC44212FC7D000BAD33F /* Object.swift in Sources */,
+				461BAC3C212FC79C00BAD33F /* Context.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,6 +286,7 @@
 		461BAC37212FC77C00BAD33F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -268,6 +296,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FlooidCoreData/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -276,6 +305,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mart.FlooidCoreData;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -284,6 +314,7 @@
 		461BAC38212FC77C00BAD33F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -293,6 +324,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = FlooidCoreData/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
