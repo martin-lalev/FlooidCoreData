@@ -25,7 +25,7 @@ public extension DataObjectProtocol where Self: NSManagedObject {
     }
     
     public static func object(forID id: String, in context:CoreDataContext) -> Self? {
-        return Self.query().filter(NSPredicate(format: "%@ = %@", self.idKey(), id)).execute(in: context).first
+        return Self.query().filter(NSPredicate(format: "\( self.idKey() ) = %@", id)).execute(in: context).first
     }
     
     public static func create(forID id: String, in context:CoreDataContext) -> Self {

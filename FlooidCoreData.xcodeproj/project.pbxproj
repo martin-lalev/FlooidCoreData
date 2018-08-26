@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		46002A312132AC8C0088023A /* FlooidCoreData.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 46002A302132AC8C0088023A /* FlooidCoreData.podspec */; };
 		461BAC33212FC77C00BAD33F /* FlooidCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 461BAC31212FC77C00BAD33F /* FlooidCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		461BAC3A212FC78E00BAD33F /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC39212FC78E00BAD33F /* Repository.swift */; };
 		461BAC3C212FC79C00BAD33F /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC3B212FC79C00BAD33F /* Context.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		46002A302132AC8C0088023A /* FlooidCoreData.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FlooidCoreData.podspec; sourceTree = SOURCE_ROOT; };
 		461BAC2E212FC77C00BAD33F /* FlooidCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlooidCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		461BAC31212FC77C00BAD33F /* FlooidCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlooidCoreData.h; sourceTree = "<group>"; };
 		461BAC32212FC77C00BAD33F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -26,7 +28,6 @@
 		461BAC3F212FC7B000BAD33F /* Results.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Results.swift; sourceTree = "<group>"; };
 		461BAC41212FC7C000BAD33F /* ThreadSafe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSafe.swift; sourceTree = "<group>"; };
 		461BAC43212FC7D000BAD33F /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
-		461BAC45212FC94F00BAD33F /* FlooidCoreData.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = FlooidCoreData.podspec; path = /Users/martinlalev/Documents/Coding/MPLTools/FlooidCoreData/FlooidCoreData/FlooidCoreData.podspec; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,7 +68,7 @@
 				461BAC43212FC7D000BAD33F /* Object.swift */,
 				461BAC31212FC77C00BAD33F /* FlooidCoreData.h */,
 				461BAC32212FC77C00BAD33F /* Info.plist */,
-				461BAC45212FC94F00BAD33F /* FlooidCoreData.podspec */,
+				46002A302132AC8C0088023A /* FlooidCoreData.podspec */,
 			);
 			path = FlooidCoreData;
 			sourceTree = "<group>";
@@ -141,6 +142,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46002A312132AC8C0088023A /* FlooidCoreData.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
