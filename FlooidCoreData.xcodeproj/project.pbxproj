@@ -15,6 +15,7 @@
 		461BAC40212FC7B000BAD33F /* Results.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC3F212FC7B000BAD33F /* Results.swift */; };
 		461BAC42212FC7C000BAD33F /* ThreadSafe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC41212FC7C000BAD33F /* ThreadSafe.swift */; };
 		461BAC44212FC7D000BAD33F /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC43212FC7D000BAD33F /* Object.swift */; };
+		4632CAA42138A83D009C18B5 /* ObjectsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4632CAA32138A83D009C18B5 /* ObjectsList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		461BAC3F212FC7B000BAD33F /* Results.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Results.swift; sourceTree = "<group>"; };
 		461BAC41212FC7C000BAD33F /* ThreadSafe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSafe.swift; sourceTree = "<group>"; };
 		461BAC43212FC7D000BAD33F /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
+		4632CAA32138A83D009C18B5 /* ObjectsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectsList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				461BAC3F212FC7B000BAD33F /* Results.swift */,
 				461BAC41212FC7C000BAD33F /* ThreadSafe.swift */,
 				461BAC43212FC7D000BAD33F /* Object.swift */,
+				4632CAA32138A83D009C18B5 /* ObjectsList.swift */,
 				461BAC31212FC77C00BAD33F /* FlooidCoreData.h */,
 				461BAC32212FC77C00BAD33F /* Info.plist */,
 				46002A302132AC8C0088023A /* FlooidCoreData.podspec */,
@@ -154,6 +157,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				461BAC3A212FC78E00BAD33F /* Repository.swift in Sources */,
+				4632CAA42138A83D009C18B5 /* ObjectsList.swift in Sources */,
 				461BAC3E212FC7A500BAD33F /* Query.swift in Sources */,
 				461BAC40212FC7B000BAD33F /* Results.swift in Sources */,
 				461BAC42212FC7C000BAD33F /* ThreadSafe.swift in Sources */,
