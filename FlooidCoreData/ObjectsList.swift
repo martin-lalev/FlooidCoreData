@@ -39,3 +39,28 @@ public class CoreDataObjectsList<T: CoreDataObject> {
         self.set.removeAllObjects()
     }
 }
+extension CoreDataObjectsList {
+    @discardableResult
+    public func replace(with items: [T]) -> [T] {
+        let oldItems = self.items
+        self.removeAll()
+        self.append(items)
+        return oldItems
+    }
+    @discardableResult
+    public func replace(with items: Set<T>) -> [T] {
+        return self.replace(with: Array(items))
+    }
+}
+
+public class CoreDataObjectsReadOnlyList<T: CoreDataObject> {
+    private let set: NSMutableSet
+    
+    public init(for object: CoreDataObject, key: String) {
+        self.set = object.mutableSetValue(forKey: key)
+    }
+    
+    public var items: [T] {
+        return self.set.allObjects as! [T]
+    }
+}
