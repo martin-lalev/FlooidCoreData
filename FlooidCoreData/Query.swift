@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 public class CoreDataQuery<T:CoreDataObject> {
-    var predicate: NSPredicate?
+    var predicates: [NSPredicate] = []
     var sortDescriptors: [NSSortDescriptor] = []
     
     let context: CoreDataContext
@@ -18,18 +18,24 @@ public class CoreDataQuery<T:CoreDataObject> {
         self.context = context
     }
     
-    public func filter(_ predicate: NSPredicate) -> Self {
-        self.predicate = predicate
+    public func filter(_ predicates: [NSPredicate]) -> Self {
+        self.predicates.append(contentsOf: predicates)
         return self
     }
+    public func filter(_ predicates: NSPredicate ...) -> Self {
+        return self.filter(predicates)
+    }
     public func sort(_ sort: [NSSortDescriptor]) -> Self {
-        self.sortDescriptors = sort
+        self.sortDescriptors.append(contentsOf: sort)
         return self
+    }
+    public func sort(_ sort: NSSortDescriptor ...) -> Self {
+        return self.sort(sort)
     }
     
     func asFetchRequest() -> NSFetchRequest<T> {
         let fetchRequest = NSFetchRequest<T>.init(entityName: T.entityName())
-        fetchRequest.predicate = self.predicate
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: self.predicates)
         fetchRequest.sortDescriptors = self.sortDescriptors
         
         
