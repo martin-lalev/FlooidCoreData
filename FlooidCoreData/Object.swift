@@ -20,12 +20,12 @@ public extension DataObjectProtocol where Self: NSManagedObject {
         return ThreadSafeCoreDataObject(self.objectID)
     }
     
-    public static func query() -> CoreDataQuery<Self> {
-        return CoreDataQuery()
+    public static func query(in context: CoreDataContext) -> CoreDataQuery<Self> {
+        return CoreDataQuery(for: context)
     }
     
     public static func object(forID id: String, in context:CoreDataContext) -> Self? {
-        return Self.query().filter(NSPredicate(format: "\( self.idKey() ) = %@", id)).execute(in: context).first
+        return Self.query(in: context).filter(NSPredicate(format: "\( self.idKey() ) = %@", id)).execute().first
     }
     
     public static func create(forID id: String, in context:CoreDataContext) -> Self {

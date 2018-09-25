@@ -29,8 +29,11 @@ public final class CoreDataContext {
         self.context.delete(item)
     }
     
-    public func deleteAll<T:CoreDataObject>(_ query:CoreDataQuery<T>) {
-        for item in query.execute(in: self) {
+}
+
+extension CoreDataQuery {
+    public func deleteAll() {
+        for item in self.execute() {
             self.context.delete(item)
         }
     }

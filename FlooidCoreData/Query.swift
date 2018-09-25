@@ -13,6 +13,11 @@ public class CoreDataQuery<T:CoreDataObject> {
     var predicate: NSPredicate?
     var sortDescriptors: [NSSortDescriptor] = []
     
+    let context: CoreDataContext
+    init(for context: CoreDataContext) {
+        self.context = context
+    }
+    
     public func filter(_ predicate: NSPredicate) -> Self {
         self.predicate = predicate
         return self
@@ -22,7 +27,7 @@ public class CoreDataQuery<T:CoreDataObject> {
         return self
     }
     
-    func asFetchRequest(in context:CoreDataContext) -> NSFetchRequest<T> {
+    func asFetchRequest() -> NSFetchRequest<T> {
         let fetchRequest = NSFetchRequest<T>.init(entityName: T.entityName())
         fetchRequest.predicate = self.predicate
         fetchRequest.sortDescriptors = self.sortDescriptors
@@ -35,14 +40,14 @@ public class CoreDataQuery<T:CoreDataObject> {
         return fetchRequest
     }
     
-    public func results(for context:CoreDataContext) -> CoreDataResults<T> {
-        return CoreDataResults<T>(for:self.asFetchRequest(in: context), in:context)
+    public func results() -> CoreDataResults<T> {
+        return CoreDataResults<T>(for:self.asFetchRequest(), in:self.context)
     }
-    public func execute(in context:CoreDataContext) -> [T] {
-        return (try? context.context.fetch(self.asFetchRequest(in: context))) ?? []
+    public func execute() -> [T] {
+        return (try? self.context.context.fetch(self.asFetchRequest())) ?? []
     }
-    public func forEach(in context:CoreDataContext, _ iterator:(T)->Void) {
-        for item in self.execute(in: context) {
+    public func forEach(_ iterator:(T)->Void) {
+        for item in self.execute() {
             iterator(item)
         }
     }
