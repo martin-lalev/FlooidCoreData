@@ -25,8 +25,13 @@ open class CoreDataRepository {
         self.backgroundContext.context.parent = self.mainContext.context
     }
     
-    public func performInBackground(action:@escaping (CoreDataContext)->Void) {
-        self.backgroundContext.context.perform { action(self.backgroundContext) }
+    public func performInBackground(action:@escaping (CoreDataContext)->Void, then: @escaping ()->Void) {
+        self.backgroundContext.context.perform {
+            action(self.backgroundContext)
+            DispatchQueue.main.async {
+                then()
+            }
+        }
     }
     
 }
