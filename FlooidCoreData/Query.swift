@@ -40,9 +40,6 @@ public class CoreDataQuery<T:CoreDataObject> {
         
         
         
-        
-        
-        
         return fetchRequest
     }
     
@@ -51,10 +48,5 @@ public class CoreDataQuery<T:CoreDataObject> {
     }
     public func execute() -> [T] {
         return (try? self.context.context.fetch(self.asFetchRequest())) ?? []
-    }
-    public func forEach(_ iterator:(T)->Void) {
-        for item in self.execute() {
-            iterator(item)
-        }
     }
 }
