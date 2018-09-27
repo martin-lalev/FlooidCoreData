@@ -1,5 +1,7 @@
 # FlooidCoreData
-A simple CoreData wrapper
+FlooidCoreData is a simple wrapper around the CoreData framework, designed to give you the same syntax as [FlooidRealm](https://github.com/martin-lalev/FlooidRealm) (wrapper around the Realm framework) where the only difference are the class name prefixes (`Realm-` vs `CoreData-`).
+> Of course, you will need to provide different model implementations (`NSManagedObject`s for CoreData and `Object`s for Realm) which may lead to slight differences in how you get or set their properties.
+
 ![Diagram](Diagram.png)
 
 ## Setup
