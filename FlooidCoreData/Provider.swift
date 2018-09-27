@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-open class CoreDataRepository {
+open class CoreDataProvider {
     
     private let configuration: CoreDataConfiguration
     public let mainContext: CoreDataContext

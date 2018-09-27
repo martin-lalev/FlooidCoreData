@@ -9,12 +9,6 @@
 import Foundation
 import CoreData
 
-private extension Notification.Name {
-    static let coreDataResultsLayerInitializedObservationName = NSNotification.Name("coreDataResultsLayerInitializedObservationName")
-    static let coreDataResultsLayerUpdatedObservationName = NSNotification.Name("coreDataResultsLayerUpdatedObservationName")
-    static let coreDataResultsLayerErrorObservationName = NSNotification.Name("coreDataResultsLayerErrorObservationName")
-}
-
 public class CoreDataResults<Managed:CoreDataObject> : NSObject, NSFetchedResultsControllerDelegate {
     
     public var objects:[Managed]? {
@@ -29,45 +23,26 @@ public class CoreDataResults<Managed:CoreDataObject> : NSObject, NSFetchedResult
         self.results.delegate = self
         try? self.results.performFetch()
         DispatchQueue.main.async {
-            self.postInitialized()
+            self.postObserver(.initialized)
         }
         
     }
     public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         DispatchQueue.main.async {
-            self.postUpdated()
+            self.postObserver(.updated)
         }
     }
-    
-    
-    
-    public func postInitialized() {
-        NotificationCenter.default.post(name: .coreDataResultsLayerInitializedObservationName, object: self)
+    public enum NotificationType: String {
+        case initialized, updated, errored
+        func asNotificationName() -> Notification.Name { return NSNotification.Name("coreDataResultsLayer-\(self.rawValue)-ObservationName") }
     }
-    public func addInitialized(_ observer:Any, selector: Selector) {
-        NotificationCenter.default.addObserver(observer, selector: selector, name: .coreDataResultsLayerInitializedObservationName, object: self)
+    func postObserver(_ type: NotificationType) {
+        NotificationCenter.default.post(name: type.asNotificationName(), object: self)
     }
-    public func removeInitialized(_ observer:Any) {
-        NotificationCenter.default.removeObserver(observer, name: .coreDataResultsLayerInitializedObservationName, object: self)
+    public func addObserver(_ observer:Any, selector: Selector, for type: NotificationType) {
+        NotificationCenter.default.addObserver(observer, selector: selector, name: type.asNotificationName(), object: self)
     }
-    
-    public func postUpdated() {
-        NotificationCenter.default.post(name: .coreDataResultsLayerUpdatedObservationName, object: self)
-    }
-    public func addUpdated(_ observer:Any, selector: Selector) {
-        NotificationCenter.default.addObserver(observer, selector: selector, name: .coreDataResultsLayerUpdatedObservationName, object: self)
-    }
-    public func removeUpdated(_ observer:Any) {
-        NotificationCenter.default.removeObserver(observer, name: .coreDataResultsLayerUpdatedObservationName, object: self)
-    }
-    
-    public func postError() {
-        NotificationCenter.default.post(name: .coreDataResultsLayerErrorObservationName, object: self)
-    }
-    public func addError(_ observer:Any, selector: Selector) {
-        NotificationCenter.default.addObserver(observer, selector: selector, name: .coreDataResultsLayerErrorObservationName, object: self)
-    }
-    public func removeError(_ observer:Any) {
-        NotificationCenter.default.removeObserver(observer, name: .coreDataResultsLayerErrorObservationName, object: self)
+    public func removeObserver(_ observer:Any, for type: NotificationType) {
+        NotificationCenter.default.removeObserver(observer, name: type.asNotificationName(), object: self)
     }
 }
