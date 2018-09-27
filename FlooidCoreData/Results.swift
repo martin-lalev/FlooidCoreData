@@ -11,8 +11,8 @@ import CoreData
 
 public class CoreDataResults<Managed:CoreDataObject> : NSObject, NSFetchedResultsControllerDelegate {
     
-    public var objects:[Managed]? {
-        return self.results.fetchedObjects
+    public var objects:[Managed] {
+        return self.results.fetchedObjects ?? []
     }
     private let results:NSFetchedResultsController<Managed>
     

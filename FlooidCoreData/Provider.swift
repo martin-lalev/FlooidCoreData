@@ -25,11 +25,12 @@ open class CoreDataProvider {
         self.backgroundContext.context.parent = self.mainContext.context
     }
     
-    public func performInBackground(action:@escaping (CoreDataContext)->Void, then: @escaping ()->Void) {
+    public func performInBackground(action:@escaping (_ backgroundContext: CoreDataContext, _ done: ()->Void)->Void, then: @escaping ()->Void) {
         self.backgroundContext.context.perform {
-            action(self.backgroundContext)
-            DispatchQueue.main.async {
-                then()
+            action(self.backgroundContext) {
+                DispatchQueue.main.async {
+                    then()
+                }
             }
         }
     }
