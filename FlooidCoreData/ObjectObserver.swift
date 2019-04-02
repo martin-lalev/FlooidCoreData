@@ -45,7 +45,12 @@ public class CoreDataObjectUpdatedObserver<Managed:CoreDataObject> : NSObject {
     
     @objc func objectsDidChange(_ notification: Notification) {
         if let updated = (notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject> ?? []).first(where: { $0 == self.object }) {
-            self.callback(updated.changedValues().reduce(into: [:]) { $0[$1.key] = (old:$1.value,new:updated.value(forKey: $1.key)) })
+            self.callback(updated.changedValues().keys.reduce(into: [:]) {
+                $0[$1] = (
+                    old:updated.changedValuesForCurrentEvent()[$1],
+                    new:updated.changedValues()[$1]
+                )
+            })
         }
     }
 }
