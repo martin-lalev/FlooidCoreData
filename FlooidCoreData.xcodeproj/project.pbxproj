@@ -16,11 +16,12 @@
 		461BAC42212FC7C000BAD33F /* ThreadSafe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC41212FC7C000BAD33F /* ThreadSafe.swift */; };
 		461BAC44212FC7D000BAD33F /* Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461BAC43212FC7D000BAD33F /* Object.swift */; };
 		4632CAA42138A83D009C18B5 /* ObjectsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4632CAA32138A83D009C18B5 /* ObjectsList.swift */; };
+		464544C92251F614000590FD /* ObjectObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 464544C82251F614000590FD /* ObjectObserver.swift */; };
 		46B188DC2141E5640009D945 /* NSPredicateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B188DB2141E5640009D945 /* NSPredicateExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		46002A302132AC8C0088023A /* FlooidCoreData.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FlooidCoreData.podspec; sourceTree = SOURCE_ROOT; };
+		46002A302132AC8C0088023A /* FlooidCoreData.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FlooidCoreData.podspec; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		461BAC2E212FC77C00BAD33F /* FlooidCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FlooidCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		461BAC31212FC77C00BAD33F /* FlooidCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlooidCoreData.h; sourceTree = "<group>"; };
 		461BAC32212FC77C00BAD33F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -31,6 +32,7 @@
 		461BAC41212FC7C000BAD33F /* ThreadSafe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSafe.swift; sourceTree = "<group>"; };
 		461BAC43212FC7D000BAD33F /* Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Object.swift; sourceTree = "<group>"; };
 		4632CAA32138A83D009C18B5 /* ObjectsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectsList.swift; sourceTree = "<group>"; };
+		464544C82251F614000590FD /* ObjectObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectObserver.swift; sourceTree = "<group>"; };
 		46B188DB2141E5640009D945 /* NSPredicateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSPredicateExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -70,6 +72,7 @@
 				461BAC3F212FC7B000BAD33F /* Results.swift */,
 				461BAC41212FC7C000BAD33F /* ThreadSafe.swift */,
 				461BAC43212FC7D000BAD33F /* Object.swift */,
+				464544C82251F614000590FD /* ObjectObserver.swift */,
 				4632CAA32138A83D009C18B5 /* ObjectsList.swift */,
 				46B188DB2141E5640009D945 /* NSPredicateExtensions.swift */,
 				461BAC31212FC77C00BAD33F /* FlooidCoreData.h */,
@@ -165,6 +168,7 @@
 				461BAC3E212FC7A500BAD33F /* Query.swift in Sources */,
 				461BAC40212FC7B000BAD33F /* Results.swift in Sources */,
 				461BAC42212FC7C000BAD33F /* ThreadSafe.swift in Sources */,
+				464544C92251F614000590FD /* ObjectObserver.swift in Sources */,
 				461BAC44212FC7D000BAD33F /* Object.swift in Sources */,
 				461BAC3C212FC79C00BAD33F /* Context.swift in Sources */,
 			);
