@@ -41,7 +41,7 @@ public class CoreDataConfiguration {
     fileprivate let managedObjectModel: NSManagedObjectModel
     fileprivate let persistentStoreCoordinator: NSPersistentStoreCoordinator
     internal let privateManagedObjectContext: CoreDataContext
-    public init(modelName:String, bundle:Bundle? = Bundle.main, inMemory:Bool) {
+    public init(modelName:String, bundle:Bundle? = Bundle.main, inMemory:Bool, baseURL: URL? = nil) {
         guard let modelURL = bundle?.url(forResource: modelName, withExtension: "momd") else {
             fatalError("Unable to Find Data Model")
         }
@@ -64,7 +64,7 @@ public class CoreDataConfiguration {
             } else {
                 try self.persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType,
                                                                        configurationName: nil,
-                                                                       at: FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                                                                       at: (baseURL ?? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0])
                                                                         .appendingPathComponent("\(modelName).sqlite"),
                                                                        options: [ NSInferMappingModelAutomaticallyOption : true,
                                                                                   NSMigratePersistentStoresAutomaticallyOption : true]
