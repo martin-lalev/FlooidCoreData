@@ -31,9 +31,9 @@ public class CoreDataObjectDeletedObserver<Managed:CoreDataObject> : NSObject {
 }
 public class CoreDataObjectUpdatedObserver<Managed:CoreDataObject> : NSObject {
     private var object:Managed
-    private let callback: ([String: (old: Any?, new: Any?)]) -> Void
+    private let callback: (Managed, [String: (old: Any?, new: Any?)]) -> Void
     
-    public init(for object:Managed, callback: @escaping ([String: (old: Any?, new: Any?)]) -> Void) {
+    public init(for object:Managed, callback: @escaping (Managed, [String: (old: Any?, new: Any?)]) -> Void) {
         self.object = object
         self.callback = callback
         super.init()
@@ -45,7 +45,7 @@ public class CoreDataObjectUpdatedObserver<Managed:CoreDataObject> : NSObject {
     
     @objc func objectsDidChange(_ notification: Notification) {
         if let updated = (notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject> ?? []).first(where: { $0 == self.object }) {
-            self.callback(updated.changedValues().keys.reduce(into: [:]) {
+            self.callback(updated as! Managed, updated.changedValues().keys.reduce(into: [:]) {
                 $0[$1] = (
                     old:updated.changedValuesForCurrentEvent()[$1],
                     new:updated.changedValues()[$1]
@@ -67,10 +67,10 @@ extension DataObjectProtocol where Self: NSManagedObject {
         return CoreDataObjectDeletedObserver(for: self, callback: callback)
     }
 
-    public static func updateObserver(for id: String, in context:CoreDataContext, callback: @escaping ([String: (old: Any?, new: Any?)]) -> Void) -> CoreDataObjectUpdatedObserver<Self>? {
+    public static func updateObserver(for id: String, in context:CoreDataContext, callback: @escaping (Self, [String: (old: Any?, new: Any?)]) -> Void) -> CoreDataObjectUpdatedObserver<Self>? {
         return Self.object(forID: id, in: context)?.updateObserver(callback: callback)
     }
-    public func updateObserver(callback: @escaping ([String: (old: Any?, new: Any?)]) -> Void) -> CoreDataObjectUpdatedObserver<Self> {
+    public func updateObserver(callback: @escaping (Self, [String: (old: Any?, new: Any?)]) -> Void) -> CoreDataObjectUpdatedObserver<Self> {
         return CoreDataObjectUpdatedObserver(for: self, callback: callback)
     }
 }
