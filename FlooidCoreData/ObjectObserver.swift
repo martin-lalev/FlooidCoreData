@@ -9,68 +9,51 @@
 import Foundation
 import CoreData
 
-public class CoreDataObjectDeletedObserver<Managed:CoreDataObject> : NSObject {
+public class CoreDataObjectObserver<Managed:CoreDataObject> : NSObject {
+
+    public enum Action { case deleted, updated }
     
-    private var object:Managed
-    private let callback: () -> Void
+    public var object: Managed
+    private let action: Action
     
-    public init(for object:Managed, callback: @escaping () -> Void) {
-        self.object = object
-        self.callback = callback
-        super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(objectsDidChange(_:)), name: .NSManagedObjectContextObjectsDidChange, object: self.object.managedObjectContext!)
-    }
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: self.object.managedObjectContext!)
-    }
-    
-    @objc func objectsDidChange(_ notification: Notification) {
-        guard (notification.userInfo?[NSDeletedObjectsKey] as? Set<NSManagedObject> ?? []).contains(self.object) else { return }
-        self.callback()
-    }
-}
-public class CoreDataObjectUpdatedObserver<Managed:CoreDataObject> : NSObject {
-    private var object:Managed
-    private let callback: (Managed, [String: (old: Any?, new: Any?)]) -> Void
-    
-    public init(for object:Managed, callback: @escaping (Managed, [String: (old: Any?, new: Any?)]) -> Void) {
-        self.object = object
-        self.callback = callback
-        super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(objectsDidChange(_:)), name: .NSManagedObjectContextObjectsDidChange, object: self.object.managedObjectContext!)
-    }
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: self.object.managedObjectContext!)
-    }
-    
-    @objc func objectsDidChange(_ notification: Notification) {
-        if let updated = (notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject> ?? []).first(where: { $0 == self.object }) {
-            self.callback(updated as! Managed, updated.changedValues().keys.reduce(into: [:]) {
-                $0[$1] = (
-                    old:updated.changedValuesForCurrentEvent()[$1],
-                    new:updated.changedValues()[$1]
-                )
-            })
+    private var actionKey: String {
+        switch self.action {
+        case .deleted:
+            return NSDeletedObjectsKey
+        case .updated:
+            return NSUpdatedObjectsKey
         }
     }
+
+    public init(for object: Managed, action: Action) {
+        self.object = object
+        self.action = action
+        super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(objectsDidChange(_:)), name: .NSManagedObjectContextObjectsDidChange, object: self.object.managedObjectContext!)
+    }
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: self.object.managedObjectContext!)
+    }
+    
+    @objc func objectsDidChange(_ notification: Notification) {
+        guard (notification.userInfo?[self.actionKey] as? Set<NSManagedObject> ?? []).contains(where: { $0 == self.object }) else { return }
+        NotificationCenter.default.post(name: self.name, object: self.object, userInfo: nil)
+    }
+    
+    private lazy var name: Notification.Name = .init("CoreDataObjectUpdatedObserver_\(object.objectID.description)")
+
+    public func add(_ observer: Any, selector: Selector) {
+        NotificationCenter.default.addObserver(observer, selector: selector, name: self.name, object: self.object)
+    }
+    public func remove(_ observer: Any) {
+        NotificationCenter.default.removeObserver(observer, name: self.name, object: self.object)
+    }
 }
 
-
-
-
-
 extension DataObjectProtocol where Self: NSManagedObject {
-    public static func deleteObserver(for id: String, in context:CoreDataContext, callback: @escaping () -> Void) -> CoreDataObjectDeletedObserver<Self>? {
-        return Self.object(forID: id, in: context)?.deleteObserver(callback: callback)
-    }
-    public func deleteObserver(callback: @escaping () -> Void) -> CoreDataObjectDeletedObserver<Self> {
-        return CoreDataObjectDeletedObserver(for: self, callback: callback)
-    }
-
-    public static func updateObserver(for id: String, in context:CoreDataContext, callback: @escaping (Self, [String: (old: Any?, new: Any?)]) -> Void) -> CoreDataObjectUpdatedObserver<Self>? {
-        return Self.object(forID: id, in: context)?.updateObserver(callback: callback)
-    }
-    public func updateObserver(callback: @escaping (Self, [String: (old: Any?, new: Any?)]) -> Void) -> CoreDataObjectUpdatedObserver<Self> {
-        return CoreDataObjectUpdatedObserver(for: self, callback: callback)
+    public static func observer(for id: String, action: CoreDataObjectObserver<Self>.Action, in context: CoreDataContext) -> CoreDataObjectObserver<Self>? {
+        return Self.object(forID: id, in: context).map {
+            return CoreDataObjectObserver(for: $0, action: action)
+        }
     }
 }
