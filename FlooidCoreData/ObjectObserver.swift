@@ -49,11 +49,3 @@ public class CoreDataObjectObserver<Managed:CoreDataObject> : NSObject {
         NotificationCenter.default.removeObserver(observer, name: self.name, object: self.object)
     }
 }
-
-extension DataObjectProtocol where Self: NSManagedObject {
-    public static func observer(for id: String, action: CoreDataObjectObserver<Self>.Action, in context: CoreDataContext) -> CoreDataObjectObserver<Self>? {
-        return Self.object(forID: id, in: context).map {
-            return CoreDataObjectObserver(for: $0, action: action)
-        }
-    }
-}
