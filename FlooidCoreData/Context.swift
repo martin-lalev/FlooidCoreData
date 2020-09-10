@@ -16,9 +16,10 @@ public final class CoreDataContext {
     }
     
     public func transaction(_ action:@escaping (CoreDataContext)->Void) {
-        
         action(self)
-        self.context.cascadeSave()
+        if self.context.hasChanges {
+            try? self.context.save()
+        }
     }
     
     public func add(_ object:CoreDataObject) {
@@ -38,15 +39,4 @@ extension CoreDataQuery {
         }
     }
     
-}
-
-extension NSManagedObjectContext {
-    func cascadeSave() {
-        try? self.save()
-        if let parent = self.parent {
-            parent.performAndWait {
-                parent.cascadeSave()
-            }
-        }
-    }
 }

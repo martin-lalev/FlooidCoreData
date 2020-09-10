@@ -13,21 +13,16 @@ open class CoreDataProvider {
     
     private let configuration: CoreDataConfiguration
     public let mainContext: CoreDataContext
-    private let backgroundContext: CoreDataContext
     
     public init(configuration: CoreDataConfiguration) {
         self.configuration = configuration
-        
-        self.mainContext = CoreDataContext(NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType))
-        self.mainContext.context.parent = self.configuration.privateManagedObjectContext.context
-        
-        self.backgroundContext = CoreDataContext(NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType))
-        self.backgroundContext.context.parent = self.mainContext.context
+        self.mainContext = CoreDataContext(self.configuration.container.viewContext)
     }
     
     public func performInBackground(action:@escaping (_ backgroundContext: CoreDataContext, _ done: ()->Void)->Void, then: @escaping ()->Void) {
-        self.backgroundContext.context.perform {
-            action(self.backgroundContext) {
+        let backgroundContext = CoreDataContext(self.configuration.container.newBackgroundContext())
+        backgroundContext.context.perform {
+            action(backgroundContext) {
                 DispatchQueue.main.async {
                     then()
                 }
@@ -38,9 +33,7 @@ open class CoreDataProvider {
 }
 
 public class CoreDataConfiguration {
-    fileprivate let managedObjectModel: NSManagedObjectModel
-    fileprivate let persistentStoreCoordinator: NSPersistentStoreCoordinator
-    internal let privateManagedObjectContext: CoreDataContext
+    fileprivate let container: NSPersistentContainer
     public init(modelName:String, bundle:Bundle? = Bundle.main, inMemory:Bool, baseURL: URL? = nil) {
         guard let modelURL = bundle?.url(forResource: modelName, withExtension: "momd") else {
             fatalError("Unable to Find Data Model")
@@ -48,34 +41,12 @@ public class CoreDataConfiguration {
         guard let managedObjectModel = NSManagedObjectModel(contentsOf: modelURL) else {
             fatalError("Unable to Load Data Model")
         }
-        
-        self.managedObjectModel = managedObjectModel
-        
-        self.persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        
-        do {
-            if inMemory {
-                try self.persistentStoreCoordinator.addPersistentStore(ofType: NSInMemoryStoreType,
-                                                                       configurationName: nil,
-                                                                       at: nil,
-                                                                       options: [ NSInferMappingModelAutomaticallyOption : true,
-                                                                                  NSMigratePersistentStoresAutomaticallyOption : true]
-                )
-            } else {
-                try self.persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType,
-                                                                       configurationName: nil,
-                                                                       at: (baseURL ?? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0])
-                                                                        .appendingPathComponent("\(modelName).sqlite"),
-                                                                       options: [ NSInferMappingModelAutomaticallyOption : true,
-                                                                                  NSMigratePersistentStoresAutomaticallyOption : true]
-                )
+        container = NSPersistentContainer(name: modelName, managedObjectModel: managedObjectModel)
+
+        container.loadPersistentStores { storeDescription, error in
+            if let error = error {
+                print("Unresolved error \(error)")
             }
-        } catch {
-            fatalError("Unable to Load Persistent Store")
         }
-        
-        self.privateManagedObjectContext = CoreDataContext(NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType))
-        
-        self.privateManagedObjectContext.context.persistentStoreCoordinator = self.persistentStoreCoordinator
     }
 }
