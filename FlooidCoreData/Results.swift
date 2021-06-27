@@ -45,4 +45,10 @@ public class CoreDataResults<Managed:CoreDataObject> : NSObject, NSFetchedResult
     public func removeObserver(_ observer:Any, for type: NotificationType) {
         NotificationCenter.default.removeObserver(observer, name: type.asNotificationName(), object: self)
     }
+    public func add(for type: NotificationType, _ observer: @escaping ([Managed]) -> Void) -> NSObjectProtocol {
+        NotificationCenter.default.addObserver(forName: type.asNotificationName(), object: self, queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+            observer(self.objects)
+        }
+    }
 }
