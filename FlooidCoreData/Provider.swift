@@ -13,14 +13,16 @@ open class CoreDataProvider {
     
     private let configuration: CoreDataConfiguration
     public let mainContext: CoreDataContext
+    public let backgroundContext: CoreDataContext
     
     public init(configuration: CoreDataConfiguration) {
         self.configuration = configuration
         self.mainContext = CoreDataContext(self.configuration.container.viewContext)
+        self.backgroundContext = CoreDataContext(self.configuration.container.newBackgroundContext())
     }
     
     public func performInBackground(action:@escaping (_ backgroundContext: CoreDataContext, _ done: ()->Void)->Void, then: @escaping ()->Void) {
-        let backgroundContext = CoreDataContext(self.configuration.container.newBackgroundContext())
+        let backgroundContext = self.backgroundContext
         backgroundContext.context.perform {
             action(backgroundContext) {
                 DispatchQueue.main.async {
