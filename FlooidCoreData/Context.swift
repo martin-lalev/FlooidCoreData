@@ -13,6 +13,7 @@ public final class CoreDataContext {
     let context: NSManagedObjectContext
     init(_ context: NSManagedObjectContext) {
         self.context = context
+        context.automaticallyMergesChangesFromParent = true
     }
     
     public func transaction(_ action:@escaping (CoreDataContext)->Void) {

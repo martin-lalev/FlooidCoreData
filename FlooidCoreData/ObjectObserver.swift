@@ -16,12 +16,12 @@ public class CoreDataObjectObserver<Managed:CoreDataObject> : NSObject {
     public var object: Managed
     private let action: Action
     
-    private var actionKey: String {
+    private var actionKey: [String] {
         switch self.action {
         case .deleted:
-            return NSDeletedObjectsKey
+            return [NSDeletedObjectsKey]
         case .updated:
-            return NSUpdatedObjectsKey
+            return [NSUpdatedObjectsKey, NSRefreshedObjectsKey]
         }
     }
 
@@ -36,7 +36,9 @@ public class CoreDataObjectObserver<Managed:CoreDataObject> : NSObject {
     }
     
     @objc func objectsDidChange(_ notification: Notification) {
-        guard (notification.userInfo?[self.actionKey] as? Set<NSManagedObject> ?? []).contains(where: { $0 == self.object }) else { return }
+        let modelsSets = self.actionKey.compactMap { (notification.userInfo?[$0] as? Set<NSManagedObject>) }
+        let models = modelsSets.reduce(Set()) { $0.union($1) }
+        guard models.contains(where: { $0 == self.object }) else { return }
         NotificationCenter.default.post(name: self.name, object: self.object, userInfo: nil)
     }
     
