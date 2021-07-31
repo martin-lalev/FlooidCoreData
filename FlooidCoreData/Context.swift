@@ -16,6 +16,16 @@ public final class CoreDataContext {
         context.automaticallyMergesChangesFromParent = true
     }
     
+    public func perform(action: @escaping (_ backgroundContext: CoreDataContext, _ done: () -> Void) -> Void, then: @escaping () -> Void) {
+        self.context.perform {
+            action(self) {
+                DispatchQueue.main.async {
+                    then()
+                }
+            }
+        }
+    }
+    
     public func transaction(_ action:@escaping (CoreDataContext)->Void) {
         action(self)
         if self.context.hasChanges {
