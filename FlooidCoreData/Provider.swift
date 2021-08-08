@@ -16,10 +16,10 @@ open class CoreDataProvider {
     public init(configuration: CoreDataConfiguration) {
         self.configuration = configuration
     }
-    public func makeMainContext() -> CoreDataContext {
+    public var viewContext: CoreDataContext {
         CoreDataContext(self.configuration.container.viewContext)
     }
-    public func makeBackgroundContext() -> CoreDataContext {
+    public func newBackgroundContext() -> CoreDataContext {
         CoreDataContext(self.configuration.container.newBackgroundContext())
     }
 }

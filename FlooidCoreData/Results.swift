@@ -22,15 +22,9 @@ public class CoreDataResults<Managed:CoreDataObject> : NSObject, NSFetchedResult
         super.init()
         self.results.delegate = self
         try? self.results.performFetch()
-        DispatchQueue.main.async {
-            self.postObserver(.initialized)
-        }
-        
     }
     public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        DispatchQueue.main.async {
-            self.postObserver(.updated)
-        }
+        self.postObserver(.updated)
     }
     public enum NotificationType: String {
         case initialized, updated, errored
@@ -46,7 +40,7 @@ public class CoreDataResults<Managed:CoreDataObject> : NSObject, NSFetchedResult
         NotificationCenter.default.removeObserver(observer, name: type.asNotificationName(), object: self)
     }
     public func add(for type: NotificationType, _ observer: @escaping ([Managed]) -> Void) -> NSObjectProtocol {
-        NotificationCenter.default.addObserver(forName: type.asNotificationName(), object: self, queue: .main) { [weak self] _ in
+        NotificationCenter.default.addObserver(forName: type.asNotificationName(), object: self, queue: nil) { [weak self] _ in
             guard let self = self else { return }
             observer(self.objects)
         }

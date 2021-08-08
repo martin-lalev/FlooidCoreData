@@ -52,7 +52,7 @@ public class CoreDataObjectObserver<Managed:CoreDataObject> : NSObject {
     }
     
     public func add(_ observer: @escaping (Managed) -> Void) -> NSObjectProtocol {
-        NotificationCenter.default.addObserver(forName: self.name, object: self.object, queue: .main) { [weak self] _ in
+        NotificationCenter.default.addObserver(forName: self.name, object: self.object, queue: nil) { [weak self] _ in
             guard let self = self else { return }
             observer(self.object)
         }

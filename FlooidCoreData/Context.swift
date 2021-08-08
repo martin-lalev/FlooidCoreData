@@ -19,9 +19,7 @@ public final class CoreDataContext {
     public func perform(action: @escaping (_ backgroundContext: CoreDataContext, _ done: () -> Void) -> Void, then: @escaping () -> Void) {
         self.context.perform {
             action(self) {
-                DispatchQueue.main.async {
-                    then()
-                }
+                then()
             }
         }
     }
