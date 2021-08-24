@@ -35,6 +35,11 @@ public class CoreDataConfiguration {
         }
         container = NSPersistentContainer(name: modelName, managedObjectModel: managedObjectModel)
 
+        if let storeURL = baseURL?.appendingPathComponent("\(modelName).sqlite") {
+            let description = NSPersistentStoreDescription(url: storeURL)
+            container.persistentStoreDescriptions = [description]
+        }
+
         container.loadPersistentStores { storeDescription, error in
             if let error = error {
                 print("Unresolved error \(error)")
