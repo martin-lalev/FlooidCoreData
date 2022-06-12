@@ -43,6 +43,7 @@ extension CoreDataObjectsList {
     @discardableResult
     public func replace(with items: [T]) -> [T] {
         let oldItems = self.items
+        guard items != oldItems else { return [] }
         self.removeAll()
         self.append(items)
         return oldItems
