@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
 s.name         = "FlooidCoreData"
-s.version      = "0.0.28"
+s.version      = "0.0.29"
 s.summary      = "Core Data stack helper."
 s.description  = "Core Data stack helper."
 s.homepage     = "http://github.com/martin-lalev/FlooidCoreData"

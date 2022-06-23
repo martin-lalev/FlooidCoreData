@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public protocol DataObjectProtocol: class {
+public protocol DataObjectProtocol: AnyObject {
     static func entityName() -> String
     static func idKey() -> String
 }
