@@ -11,21 +11,25 @@ import CoreData
 
 public class CoreDataObjectObserver<Managed:CoreDataObject> : NSObject {
 
-    public enum Action { case deleted, updated }
+    public enum Action { case deleted, updated, refreshed }
     
     public var object: Managed
-    private let action: Action
+    private let action: [Action]
     
     private var actionKey: [String] {
-        switch self.action {
-        case .deleted:
-            return [NSDeletedObjectsKey]
-        case .updated:
-            return [NSUpdatedObjectsKey, NSRefreshedObjectsKey]
+        self.action.map { action in
+            switch action {
+            case .deleted:
+                return NSDeletedObjectsKey
+            case .updated:
+                return NSUpdatedObjectsKey
+            case .refreshed:
+                return NSRefreshedObjectsKey
+            }
         }
     }
 
-    public init(for object: Managed, action: Action) {
+    public init(for object: Managed, action: Action ...) {
         self.object = object
         self.action = action
         super.init()
