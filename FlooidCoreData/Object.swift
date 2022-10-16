@@ -9,13 +9,14 @@
 import Foundation
 import CoreData
 
-public protocol DataObjectProtocol: AnyObject {
+public protocol PlainDataObjectProtocol: AnyObject {
     static func entityName() -> String
+}
+public protocol DataObjectProtocol: PlainDataObjectProtocol {
     static func idKey() -> String
 }
 
-public extension DataObjectProtocol where Self: NSManagedObject {
-    
+public extension PlainDataObjectProtocol where Self: NSManagedObject {
     func threadSafe() -> ThreadSafeCoreDataObject<Self> {
         return ThreadSafeCoreDataObject(self.objectID)
     }
@@ -23,6 +24,19 @@ public extension DataObjectProtocol where Self: NSManagedObject {
     static func query(in context: CoreDataContext) -> CoreDataQuery<Self> {
         return CoreDataQuery(for: context)
     }
+    
+    static func create(in context:CoreDataContext) -> Self {
+        let item = Self(entity: NSEntityDescription.entity(forEntityName: Self.entityName(), in: context.context)!, insertInto: context.context)
+        context.add(item)
+        return item
+    }
+
+    func delete(from context: CoreDataContext) {
+        context.delete(self)
+    }
+}
+
+public extension DataObjectProtocol where Self: NSManagedObject {
     
     static func object(forID id: String, in context:CoreDataContext) -> Self? {
         return Self.query(in: context).filter(NSPredicate(format: "\( self.idKey() ) = %@", id)).execute().first
@@ -35,20 +49,11 @@ public extension DataObjectProtocol where Self: NSManagedObject {
         return item
     }
     
-    static func create(in context:CoreDataContext) -> Self {
-        let item = Self(entity: NSEntityDescription.entity(forEntityName: Self.entityName(), in: context.context)!, insertInto: context.context)
-        context.add(item)
-        return item
-    }
-    
     static func findOrCreate(in context:CoreDataContext, id: String) -> Self {
         return self.object(forID: id, in: context) ?? self.create(forID: id, in: context)
-    }
-
-    func delete(from context: CoreDataContext) {
-        context.delete(self)
     }
     
 }
 
+public typealias PlainCoreDataObject = NSManagedObject & PlainDataObjectProtocol
 public typealias CoreDataObject = NSManagedObject & DataObjectProtocol

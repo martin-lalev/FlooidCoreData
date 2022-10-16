@@ -9,10 +9,10 @@
 import Foundation
 
 
-public class CoreDataObjectsList<T: CoreDataObject> {
+public class CoreDataObjectsList<T: PlainCoreDataObject> {
     private let set: NSMutableSet
     
-    public init(for object: CoreDataObject, key: String) {
+    public init(for object: PlainCoreDataObject, key: String) {
         self.set = object.mutableSetValue(forKey: key)
     }
     
@@ -54,10 +54,10 @@ extension CoreDataObjectsList {
     }
 }
 
-public class CoreDataObjectsReadOnlyList<T: CoreDataObject> {
+public class CoreDataObjectsReadOnlyList<T: PlainCoreDataObject> {
     private let set: NSMutableSet
     
-    public init(for object: CoreDataObject, key: String) {
+    public init(for object: PlainCoreDataObject, key: String) {
         self.set = object.mutableSetValue(forKey: key)
     }
     
@@ -70,9 +70,9 @@ public class CoreDataObjectsReadOnlyList<T: CoreDataObject> {
 
 public class CoreDataObjectProperty<T> {
     private let key: String
-    private let object: CoreDataObject
+    private let object: PlainCoreDataObject
     
-    public init(for object: CoreDataObject, key: String) {
+    public init(for object: PlainCoreDataObject, key: String) {
         self.object = object
         self.key = key
     }

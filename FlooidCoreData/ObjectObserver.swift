@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public class CoreDataObjectObserver<Managed:CoreDataObject> : NSObject {
+public class CoreDataObjectObserver<Managed:PlainCoreDataObject> : NSObject {
 
     public enum Action { case deleted, updated, refreshed }
     

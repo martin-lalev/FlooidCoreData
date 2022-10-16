@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public class CoreDataResults<Managed:CoreDataObject> : NSObject, NSFetchedResultsControllerDelegate {
+public class CoreDataResults<Managed:PlainCoreDataObject> : NSObject, NSFetchedResultsControllerDelegate {
     
     public var objects:[Managed] {
         return self.results.fetchedObjects ?? []

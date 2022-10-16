@@ -31,11 +31,11 @@ public final class CoreDataContext {
         }
     }
     
-    public func add(_ object:CoreDataObject) {
+    public func add(_ object:PlainCoreDataObject) {
         self.context.insert(object)
     }
     
-    public func delete(_ item:CoreDataObject) {
+    public func delete(_ item:PlainCoreDataObject) {
         self.context.delete(item)
     }
     

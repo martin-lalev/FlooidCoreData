@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public class CoreDataQuery<T:CoreDataObject> {
+public class CoreDataQuery<T:PlainCoreDataObject> {
     var predicates: [NSPredicate] = []
     var sortDescriptors: [NSSortDescriptor] = []
     
