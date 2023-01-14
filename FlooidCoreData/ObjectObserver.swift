@@ -9,56 +9,54 @@
 import Foundation
 import CoreData
 
-public class CoreDataObjectObserver<Managed:PlainCoreDataObject> : NSObject {
+public class CoreDataContextObserver<Managed, T> : NSObject {
 
-    public enum Action { case deleted, updated, refreshed }
-    
-    public var object: Managed
-    private let action: [Action]
-    
-    private var actionKey: [String] {
-        self.action.map { action in
-            switch action {
-            case .deleted:
-                return NSDeletedObjectsKey
-            case .updated:
-                return NSUpdatedObjectsKey
-            case .refreshed:
-                return NSRefreshedObjectsKey
-            }
-        }
+    public struct Changes {
+        public let deleted: Set<NSManagedObject>?
+        public let updated: Set<NSManagedObject>?
+        public let refreshed: Set<NSManagedObject>?
     }
-
-    public init(for object: Managed, action: Action ...) {
-        self.object = object
-        self.action = action
+    
+    public var objectMatcher: (Changes) -> T?
+    public let context: NSManagedObjectContext
+    
+    public init(in context: NSManagedObjectContext, for objectMatcher: @escaping (Changes) -> T?) {
+        self.objectMatcher = objectMatcher
+        self.context = context
         super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(objectsDidChange(_:)), name: .NSManagedObjectContextObjectsDidChange, object: self.object.managedObjectContext!)
+        NotificationCenter.default.addObserver(self, selector: #selector(objectsDidChange(_:)), name: .NSManagedObjectContextObjectsDidChange, object: self.context)
+    }
+    public convenience init(in context: CoreDataContext, for objectMatcher: @escaping (Changes) -> T?) {
+        self.init(in: context.context, for: objectMatcher)
     }
     deinit {
-        NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: self.object.managedObjectContext!)
+        NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: self.context)
     }
     
     @objc func objectsDidChange(_ notification: Notification) {
-        let modelsSets = self.actionKey.compactMap { (notification.userInfo?[$0] as? Set<NSManagedObject>) }
-        let models = modelsSets.reduce(Set()) { $0.union($1) }
-        guard models.contains(where: { $0 == self.object }) else { return }
-        NotificationCenter.default.post(name: self.name, object: self.object, userInfo: nil)
+        let changes = Changes(
+            deleted: notification.userInfo?[NSDeletedObjectsKey] as? Set<NSManagedObject>,
+            updated: notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>,
+            refreshed: notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject>
+        )
+        if let mapped = objectMatcher(changes) {
+            NotificationCenter.default.post(name: self.name, object: self, userInfo: ["model": mapped])
+        }
     }
     
-    private lazy var name: Notification.Name = .init("CoreDataObjectUpdatedObserver_\(object.objectID.description)")
+    private let name = Notification.Name("CoreDataObjectUpdatedObserver_\(UUID().uuidString)")
 
     public func add(_ observer: Any, selector: Selector) {
-        NotificationCenter.default.addObserver(observer, selector: selector, name: self.name, object: self.object)
+        NotificationCenter.default.addObserver(observer, selector: selector, name: self.name, object: self)
     }
     public func remove(_ observer: Any) {
-        NotificationCenter.default.removeObserver(observer, name: self.name, object: self.object)
+        NotificationCenter.default.removeObserver(observer, name: self.name, object: self)
     }
     
-    public func add(_ observer: @escaping (Managed) -> Void) -> NSObjectProtocol {
-        NotificationCenter.default.addObserver(forName: self.name, object: self.object, queue: nil) { [weak self] _ in
-            guard let self = self else { return }
-            observer(self.object)
+    public func add(_ observer: @escaping (T) -> Void) -> NSObjectProtocol {
+        NotificationCenter.default.addObserver(forName: self.name, object: self, queue: nil) { note in
+            guard let model = note.userInfo?["model"] as? T else { return }
+            observer(model)
         }
     }
 }

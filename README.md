@@ -7,7 +7,7 @@ FlooidCoreData is a simple wrapper around the CoreData framework, designed to gi
 ## Installation
 
 #### CocoaPods
-`pod 'FlooidCoreData', :git => 'https://github.com/martin-lalev/FlooidCoreData', :tag => '0.0.12'`
+`pod 'FlooidCoreData', :git => 'https://github.com/martin-lalev/FlooidCoreData', :tag => '0.0.32'`
 
 ## Setup
 
