@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public class CoreDataContextObserver<Managed, T> : NSObject {
+public class CoreDataContextObserver<Managed> : NSObject {
 
     public struct Changes {
         public let deleted: Set<NSManagedObject>?
@@ -17,31 +17,32 @@ public class CoreDataContextObserver<Managed, T> : NSObject {
         public let refreshed: Set<NSManagedObject>?
     }
     
-    public var objectMatcher: (Changes) -> T?
+    public private(set) var changes: Changes {
+        didSet {
+            NotificationCenter.default.post(name: self.name, object: self, userInfo: ["changes": changes])
+        }
+    }
     public let context: NSManagedObjectContext
     
-    public init(in context: NSManagedObjectContext, for objectMatcher: @escaping (Changes) -> T?) {
-        self.objectMatcher = objectMatcher
+    public init(in context: NSManagedObjectContext) {
+        self.changes = Changes(deleted: nil, updated: nil, refreshed: nil)
         self.context = context
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(objectsDidChange(_:)), name: .NSManagedObjectContextObjectsDidChange, object: self.context)
     }
-    public convenience init(in context: CoreDataContext, for objectMatcher: @escaping (Changes) -> T?) {
-        self.init(in: context.context, for: objectMatcher)
+    public convenience init(in context: CoreDataContext) {
+        self.init(in: context.context)
     }
     deinit {
         NotificationCenter.default.removeObserver(self, name: .NSManagedObjectContextObjectsDidChange, object: self.context)
     }
     
     @objc func objectsDidChange(_ notification: Notification) {
-        let changes = Changes(
+        self.changes = Changes(
             deleted: notification.userInfo?[NSDeletedObjectsKey] as? Set<NSManagedObject>,
             updated: notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject>,
             refreshed: notification.userInfo?[NSRefreshedObjectsKey] as? Set<NSManagedObject>
         )
-        if let mapped = objectMatcher(changes) {
-            NotificationCenter.default.post(name: self.name, object: self, userInfo: ["model": mapped])
-        }
     }
     
     private let name = Notification.Name("CoreDataObjectUpdatedObserver_\(UUID().uuidString)")
@@ -53,9 +54,9 @@ public class CoreDataContextObserver<Managed, T> : NSObject {
         NotificationCenter.default.removeObserver(observer, name: self.name, object: self)
     }
     
-    public func add(_ observer: @escaping (T) -> Void) -> NSObjectProtocol {
+    public func add(_ observer: @escaping (Changes) -> Void) -> NSObjectProtocol {
         NotificationCenter.default.addObserver(forName: self.name, object: self, queue: nil) { note in
-            guard let model = note.userInfo?["model"] as? T else { return }
+            guard let model = note.userInfo?["changes"] as? Changes else { return }
             observer(model)
         }
     }
