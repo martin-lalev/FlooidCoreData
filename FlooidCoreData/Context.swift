@@ -24,6 +24,15 @@ public final class CoreDataContext {
         }
     }
     
+    public func executeInBackground(_ action: @escaping (CoreDataContext) -> Void) async {
+        await withCheckedContinuation { continuation in
+            self.perform(action: { context, done in
+                context.transaction(action)
+                done()
+            }, then: continuation.resume)
+        }
+    }
+    
     public func transaction(_ action:@escaping (CoreDataContext)->Void) {
         action(self)
         if self.context.hasChanges {
